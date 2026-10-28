@@ -100,7 +100,18 @@ const subjects=[['📖','Español','Lectura, escritura y comprensión'],['➗','
 function goHome(){document.getElementById('home').classList.remove('hidden');document.getElementById('workspace').classList.add('hidden');window.scrollTo({top:0,behavior:'smooth'})}
 function goGrades(){document.getElementById('grades').scrollIntoView({behavior:'smooth'})}
 function selectGrade(g){currentGrade=g;const w=document.getElementById('workspace');document.getElementById('home').classList.remove('hidden');w.classList.remove('hidden');w.innerHTML='<button class="back" onclick="goHome()">← Volver al inicio</button><span class="pill" style="margin-left:8px">TU AULA</span><h2>¡Hola, explorador de '+g+'! 🎒</h2><p class="lead">Selecciona un área para entrar a tus actividades. Los contenidos se irán diferenciando por grado y se podrán ampliar con los libros del Instituto.</p><div class="lesson-grid">'+subjects.map(s=>'<button class="lesson" onclick="showSubject(\''+s[1]+'\')"><div class="big">'+s[0]+'</div><h3>'+s[1]+'</h3><p>'+s[2]+'</p><strong>Entrar al área →</strong></button>').join('')+'</div>';w.scrollIntoView({behavior:'smooth',block:'start'})}
-function showSubject(s){currentSubject=s;const w=document.getElementById('workspace');w.classList.remove('hidden');document.getElementById('home').classList.remove('hidden');if(s==='Matemáticas'){mathHome()}else if(s==='Inglés'){englishHome()}else if(s==='Ciencias Naturales'){generalHome('🌿','Ciencias Naturales','Observa, pregunta y descubre cómo funciona la vida. Para tercero a quinto, la plataforma priorizará ilustraciones biológicas claras y actividades de observación.',['El cuerpo humano','Los seres vivos','Ecosistemas y cuidado del ambiente'])}else if(s==='Ciencias Sociales'){generalHome('🌎','Ciencias Sociales','Aprende a leer mapas, ubicar lugares y comprender nuestra comunidad, Colombia y el mundo.',['Mapas y puntos cardinales','Colombia: regiones y departamentos','Historia y comunidad'])}else if(s==='Español'){generalHome('📖','Español','Lee, comprende, escribe y comparte tus ideas.',['Comprensión lectora','Vocabulario y ortografía','Escritura creativa'])}else if(s==='Evaluaciones'){generalHome('📝','Evaluaciones','Prueba lo aprendido con preguntas de práctica. En esta versión inicial, las evaluaciones son de demostración.',['Evaluación de matemáticas','Comprensión lectora','Ciencias naturales'])}else if(s==='Talleres de refuerzo'){generalHome('🧩','Talleres de refuerzo','Vuelve a practicar los temas que necesitan más trabajo.',['Repaso guiado','Ejercicios paso a paso','Desafío final'])}else if(s==='Recursos'){resourceHome()}else if(s==='Talleres de refuerzo'){workshopHome()}else{generalHome('✨',s,'Este espacio se organizará con actividades adecuadas para '+currentGrade+'.',['Explorar el tema','Actividad práctica','Evaluación corta'])}w.scrollIntoView({behavior:'smooth',block:'start'})}
+function showSubject(s){
+ currentSubject=s;const w=document.getElementById('workspace');w.classList.remove('hidden');document.getElementById('home').classList.remove('hidden');
+ if(s==='Matemáticas')mathHome();
+ else if(s==='Inglés')englishHome();
+ else if(s==='Evaluaciones')evaluationHome();
+ else if(s==='Talleres de refuerzo')workshopHome();
+ else if(s==='Recursos')resourceHome();
+ else if(['Ciencias Naturales','Ciencias Sociales','Español','Arte','Música','Educación Física','Convivencia'].includes(s))generalHome(({'Ciencias Naturales':'🌿','Ciencias Sociales':'🌎','Español':'📖','Arte':'🎨','Música':'🎵','Educación Física':'🏃','Convivencia':'🤝'})[s],s,({'Ciencias Naturales':'Explora los seres vivos, el cuerpo humano y los ecosistemas.','Ciencias Sociales':'Mapas, orientación, historia, ciudadanía y diversidad de Colombia.','Español':'Lee, comprende, escribe y comparte tus ideas.','Arte':'Explora colores, formas, materiales y crea tus propias obras.','Música':'Descubre el ritmo, los sonidos, la voz y los instrumentos.','Educación Física':'Aprende sobre movimiento, coordinación, juego limpio y hábitos saludables.','Convivencia':'Practica el respeto, la empatía, la resolución pacífica de conflictos y el trabajo en equipo.'})[s],subjectTopics(s).map(x=>x.t));
+ else if(s==='Ingresar'||s==='Registrarse')accountInfo(s);
+ else generalHome('✨',s,'Actividades para '+currentGrade+'.',['Explorar el tema','Actividad práctica','Evaluación corta']);
+ w.scrollIntoView({behavior:'smooth',block:'start'});
+}
 const curriculum={
 'Español':[
 {t:'Comprensión lectora',e:'Leer es construir significado. Primero identifica quiénes participan, dónde ocurre la historia y qué problema aparece. Después busca pistas en el texto para justificar tus respuestas.',p:'Lee: “Lina encontró una semilla junto al patio. La sembró, la regó cada mañana y, después de varios días, apareció un pequeño brote”. ¿Qué hizo Lina primero?',o:['Regó una planta grande','Encontró una semilla','Vio una flor','Cortó una rama'],a:1,why:'Primero encontró una semilla; luego la sembró y la regó.'},
@@ -112,6 +123,26 @@ const curriculum={
 {t:'Colombia: regiones y diversidad',e:'Colombia tiene regiones naturales con paisajes, climas y tradiciones diferentes: Caribe, Andina, Pacífica, Orinoquía, Amazonía e Insular. Santa Marta está en la región Caribe, junto al mar Caribe y cerca de la Sierra Nevada.',p:'¿En qué región natural está Santa Marta?',o:['Amazonía','Caribe','Orinoquía','Pacífica'],a:1,why:'Santa Marta está en el departamento del Magdalena, en la región Caribe.'},
 {t:'Comunidad, derechos y deberes',e:'Una comunidad comparte espacios, normas y responsabilidades. Los derechos protegen a las personas; los deberes nos ayudan a convivir y cuidar lo que es de todos.',p:'¿Cuál acción ayuda a cuidar un espacio común?',o:['Rayar las paredes','Dejar basura','Respetar las normas y recoger residuos','Romper las plantas'],a:2,why:'Cuidar el espacio y respetar las normas beneficia a toda la comunidad.'}
 ],
+'Arte':[
+{t:'Colores primarios y secundarios',e:'Los colores primarios tradicionales en pintura son amarillo, azul y rojo. Al mezclar algunos colores se obtienen otros, como naranja, verde y violeta.',p:'¿Qué color resulta de mezclar azul y amarillo en pintura?',o:['Verde','Naranja','Rojo','Negro'],a:0,why:'Azul y amarillo producen verde en la mezcla tradicional de pintura.'},
+{t:'Formas, líneas y composición',e:'Las líneas pueden ser rectas, curvas, quebradas o espirales. Las formas geométricas y orgánicas ayudan a organizar una composición visual.',p:'¿Cuál es una línea curva?',o:['Una línea recta con regla','Una línea que se dobla suavemente','Un punto aislado','Un cuadrado'],a:1,why:'Una línea curva cambia gradualmente de dirección.'},
+{t:'Crear y expresar ideas',e:'El arte permite comunicar ideas, emociones y observaciones usando materiales, colores, sonidos y movimiento.',p:'¿Qué conviene hacer antes de una obra artística?',o:['Planear una idea','Romper los materiales','Copiar sin observar','No elegir materiales'],a:0,why:'Planear una idea ayuda a decidir qué queremos expresar.'}
+],
+'Música':[
+{t:'Ritmo y pulso',e:'El pulso es una regularidad que sentimos en la música. El ritmo combina sonidos y silencios de distintas duraciones.',p:'¿Qué podemos hacer para seguir el pulso de una canción?',o:['Aplaudir de manera regular','Hablar encima de todo','Ignorar los sonidos','Cambiar la canción sin escuchar'],a:0,why:'Aplaudir regularmente ayuda a sentir el pulso.'},
+{t:'Familias de instrumentos',e:'Los instrumentos producen sonidos de distintas maneras: al golpear, soplar, pulsar cuerdas o frotarlas.',p:'¿Cuál es un instrumento de percusión?',o:['Tambor','Flauta','Violín','Trompeta'],a:0,why:'El tambor produce sonido al ser golpeado.'},
+{t:'La voz y la escucha',e:'Cantar requiere escuchar, respirar con comodidad y cuidar la voz sin gritar ni forzarla.',p:'¿Cómo cuidamos la voz al cantar?',o:['Gritando siempre','Hidratándonos y evitando forzarla','No descansando','Cantando con dolor'],a:1,why:'Hidratarse y evitar esfuerzos excesivos ayuda a cuidar la voz.'}
+],
+'Educación Física':[
+{t:'Calentamiento y seguridad',e:'El calentamiento prepara el cuerpo para moverse. Conviene empezar suavemente, usar un espacio seguro y detenerse si aparece dolor o mareo.',p:'¿Qué es recomendable antes de una actividad física?',o:['Calentar suavemente','Empezar al máximo sin preparación','Empujar a compañeros','Ignorar el dolor'],a:0,why:'El calentamiento prepara gradualmente al cuerpo.'},
+{t:'Coordinación y equilibrio',e:'La coordinación integra movimientos y sentidos; el equilibrio permite mantener o recuperar una postura estable.',p:'¿Qué actividad practica el equilibrio?',o:['Caminar sobre una línea marcada con seguridad','Lanzar basura','Correr mirando el celular','Empujar a otra persona'],a:0,why:'Caminar sobre una línea segura requiere controlar la postura.'},
+{t:'Juego limpio y cooperación',e:'El juego limpio respeta reglas, compañeros y decisiones. Cooperar significa ayudar al equipo a alcanzar una meta compartida.',p:'¿Qué demuestra juego limpio?',o:['Respetar reglas y compañeros','Hacer trampa','Burlarse de quien pierde','Cambiar reglas para ganar'],a:0,why:'Respetar a los demás y las reglas hace el juego más justo.'}
+],
+'Convivencia':[
+{t:'Empatía y respeto',e:'La empatía consiste en intentar comprender cómo se siente otra persona. El respeto reconoce que todos merecen un trato digno.',p:'Un compañero está triste. ¿Qué puedes hacer?',o:['Escucharlo y ofrecer ayuda','Burlarte','Ignorarlo siempre','Contar sus asuntos para reírte'],a:0,why:'Escuchar con respeto y ofrecer ayuda demuestra empatía.'},
+{t:'Resolver conflictos dialogando',e:'Un conflicto se puede manejar escuchando ambas partes, expresando lo que sentimos sin insultar y buscando acuerdos seguros.',p:'¿Cuál es una buena primera respuesta ante un desacuerdo?',o:['Insultar','Escuchar y explicar con calma','Golpear','Difundir rumores'],a:1,why:'Dialogar y escuchar ayuda a buscar una solución pacífica.'},
+{t:'Responsabilidad y colaboración',e:'Ser responsable implica cumplir acuerdos y cuidar los espacios compartidos. Colaborar es aportar para lograr una meta común.',p:'¿Qué acción muestra responsabilidad en el aula?',o:['Cumplir el turno y cuidar los materiales','Esconder los útiles de otros','Dejar todo desordenado','Interrumpir deliberadamente'],a:0,why:'Cuidar materiales y cumplir acuerdos favorece al grupo.'}
+],
 'Ciencias Naturales':[
 {t:'El cuerpo humano',e:'El cuerpo está formado por sistemas que trabajan juntos. El sistema respiratorio incorpora oxígeno; el circulatorio transporta sangre; el digestivo obtiene nutrientes y el locomotor permite sostén y movimiento.',p:'¿Qué sistema transporta la sangre por el cuerpo?',o:['Digestivo','Circulatorio','Respiratorio','Nervioso'],a:1,why:'El corazón y los vasos sanguíneos forman parte del sistema circulatorio.'},
 {t:'Seres vivos y sus necesidades',e:'Los seres vivos nacen, crecen, responden al ambiente y necesitan recursos. Las plantas requieren luz, agua, aire y nutrientes; los animales necesitan alimento, agua, aire y un hábitat adecuado.',p:'¿Qué necesita una planta para crecer saludablemente?',o:['Solo piedras','Agua y luz, entre otros recursos','Plástico','Oscuridad permanente'],a:1,why:'El agua, la luz, el aire y los nutrientes ayudan a las plantas a crecer.'},
@@ -122,6 +153,39 @@ const curriculum={
 {t:'Evaluación de Sociales',e:'Los mapas ayudan a ubicar lugares y entender la distribución del territorio. Observa orientación, símbolos y leyenda.',p:'¿Qué explica la leyenda de un mapa?',o:['Los símbolos utilizados','La edad del lector','El clima de todos los países','La hora del día'],a:0,why:'La leyenda explica el significado de los símbolos del mapa.'},
 {t:'Evaluación de Ciencias',e:'Los sistemas del cuerpo y los ecosistemas funcionan gracias a relaciones entre sus componentes.',p:'¿Qué órgano bombea la sangre?',o:['Pulmón','Estómago','Corazón','Riñón'],a:2,why:'El corazón impulsa la sangre por los vasos sanguíneos.'}
 ]};
+
+function evaluationHome(){
+ const w=document.getElementById('workspace');
+ const areas=['Español','Matemáticas','Ciencias Naturales','Ciencias Sociales','Inglés','Arte','Música','Educación Física','Convivencia'];
+ w.innerHTML='<button class="back" onclick="selectGrade(currentGrade)">← Volver al aula</button><div class="course-banner"><div class="course-symbol">📝</div><div><span class="pill">EVALUACIÓN FORMATIVA</span><h2>Evaluaciones por asignatura</h2><p class="lead">Elige el área, responde las preguntas y recibe retroalimentación inmediata. Nivel: '+currentGrade+'.</p></div></div><div class="lesson-grid">'+areas.map((a,i)=>'<button class="lesson" onclick="startAssessment(\\''+a+'\\')"><div class="big">'+['📖','➗','🔬','🗺️','🇬🇧','🎨','🎵','🏃','🤝'][i]+'</div><h3>'+a+'</h3><p>Preguntas de práctica y revisión de respuestas.</p><strong>Iniciar evaluación →</strong></button>').join('')+'</div><p class="course-note">Estas evaluaciones son formativas y no guardan calificaciones en una base de datos. Para seguimiento individual seguro se necesitará implementar acceso de estudiantes y almacenamiento protegido.</p>';
+ w.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function startAssessment(area){
+ const w=document.getElementById('workspace');let qs=subjectTopics(area);
+ if(area==='Matemáticas'){mathHome();newMath();return}
+ if(area==='Inglés'){englishHome();englishQuiz();return}
+ if(!qs||!qs.length)qs=subjectTopics('Español');
+ let index=0,score=0;
+ function render(){
+  const q=qs[index%qs.length];
+  w.innerHTML='<button class="back" onclick="evaluationHome()">← Volver a evaluaciones</button><div class="course-banner"><div class="course-symbol">📝</div><div><span class="pill">'+area+' · '+currentGrade+'</span><h2>Pregunta '+(index+1)+' de '+qs.length+'</h2><p class="lead">Lee la explicación y selecciona una respuesta.</p></div></div><div class="activity"><h3>'+q.p+'</h3><div class="options">'+q.o.map((x,i)=>'<button class="option" onclick="assessmentAnswer('+i+')">'+String.fromCharCode(65+i)+'. '+x+'</button>').join('')+'</div><p id="assessmentFeedback" class="feedback"></p><div id="assessmentNext"></div></div>';
+ }
+ window.assessmentAnswer=function(choice){
+  const q=qs[index%qs.length],f=document.getElementById('assessmentFeedback');
+  document.querySelectorAll('#workspace .option').forEach(b=>b.disabled=true);
+  if(choice===q.a){score++;f.textContent='✅ ¡Correcto! '+q.why;f.style.color='#16834a'}else{f.textContent='📘 Repasa: '+q.why;f.style.color='#b65320'}
+  document.getElementById('assessmentNext').innerHTML='<button class="btn btn-yellow" onclick="assessmentNext()">'+(index+1>=qs.length?'Ver resultado':'Siguiente pregunta →')+'</button>';
+ };
+ window.assessmentNext=function(){
+  index++;
+  if(index>=qs.length){w.innerHTML='<button class="back" onclick="evaluationHome()">← Todas las evaluaciones</button><div class="activity" style="text-align:center"><div style="font-size:60px">🏆</div><h2>¡Terminaste!</h2><p>Resultado de práctica en '+area+':</p><div class="mathbox">'+score+' / '+qs.length+'</div><p>'+(score===qs.length?'¡Excelente! Dominas estas preguntas.':'Vuelve a estudiar los temas y realiza otra práctica. No te rindas.')+'</p><button class="btn btn-yellow" onclick="startAssessment(\\''+area+'\\')">Intentar de nuevo ↻</button><button class="btn btn-white" onclick="showSubject(\\'Talleres de refuerzo\\')">Ir al refuerzo</button></div>'}
+  else render();
+ };
+ render();w.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function accountInfo(action){
+ const w=document.getElementById('workspace');w.innerHTML='<button class="back" onclick="goHome()">← Volver al inicio</button><div class="course-banner"><div class="course-symbol">🔐</div><div><span class="pill">ACCESO A LA PLATAFORMA</span><h2>'+action+'</h2><p class="lead">El acceso con cuentas reales todavía no está activado. No introduzcas contraseñas ni datos personales en esta versión de demostración.</p></div></div><div class="course-note">Para habilitar cuentas privadas de estudiantes y docentes, con calificaciones y seguimiento, se debe conectar un servicio de autenticación y una base de datos segura.</div>';
+}
 function subjectTopics(title){
  const base=curriculum[title]||[{t:'Explora el tema',e:'Observa, formula preguntas, identifica las ideas principales y explica lo aprendido con tus propias palabras.',p:'¿Cuál es una buena estrategia para aprender algo nuevo?',o:['Observar y hacer preguntas','No prestar atención','Copiar sin comprender','Abandonar al primer error'],a:0,why:'Observar, preguntar y practicar favorece el aprendizaje.'}];
  const g=currentGrade;
